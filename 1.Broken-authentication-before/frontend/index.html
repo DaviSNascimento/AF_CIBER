@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste de Autenticação Vulnerável</title>
+    <style>
+        body { font-family: sans-serif; background-color: #f0f2f5; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 2rem 0; }
+        .container { background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); width: 100%; max-width: 400px; }
+        h1, h2 { text-align: center; color: #333; }
+        h2 { margin-top: 2rem; border-top: 1px solid #eee; padding-top: 2rem; }
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; color: #555; }
+        .form-group input { width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
+        button { width: 100%; padding: 0.75rem; border: none; background-color: #0070f3; color: white; font-size: 1rem; border-radius: 4px; cursor: pointer; }
+        button:hover { background-color: #005bb5; }
+        .result { margin-top: 1.5rem; padding: 1rem; border-radius: 4px; word-wrap: break-word; }
+        .result.success { background-color: #e6ffed; border: 1px solid #b7f1c9; color: #22543d; }
+        .result.error { background-color: #ffebe6; border: 1px solid #f1b7b7; color: #542222; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- SEÇÃO DE LOGIN -->
+        <h1>Login Vulnerável (POST)</h1>
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="loginUsername">Usuário</label>
+                <input type="text" id="loginUsername" required>
+            </div>
+            <div class="form-group">
+                <label for="loginPassword">Senha</label>
+                <input type="password" id="loginPassword">
+            </div>
+            <button type="submit">Entrar</button>
+        </form>
+        <div id="loginResult" class="result"></div>
+        
+        <!-- NOVA SEÇÃO PARA BUSCAR PERFIL -->
+        <h2>Buscar Perfil Vulnerável (GET)</h2>
+        <form id="profileForm">
+            <div class="form-group">
+                <label for="profileUsername">Nome de Usuário a ser buscado</label>
+                <input type="text" id="profileUsername" required>
+            </div>
+            <button type="submit">Buscar Perfil</button>
+        </form>
+        <div id="profileResult" class="result"></div>
+    </div>
+
+    <script>
+        // --- SCRIPT PARA O FORMULÁRIO DE LOGIN (POST) ---
+        const loginForm = document.getElementById('loginForm');
+        const loginUsernameInput = document.getElementById('loginUsername');
+        const loginPasswordInput = document.getElementById('loginPassword');
+        const loginResultDiv = document.getElementById('loginResult');
+
+        loginForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const username = loginUsernameInput.value;
+            const password = loginPasswordInput.value;
+
+            loginResultDiv.innerHTML = 'Processando...';
+            loginResultDiv.className = 'result';
+
+            try {
+                const response = await fetch('http://localhost:3001/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                const data = await response.json();
+
+                if (response.ok) {
+                    loginResultDiv.className = 'result success';
+                    loginResultDiv.innerHTML = `<strong>Login bem-sucedido!</strong><br><pre>${JSON.stringify(data.user, null, 2)}</pre>`;
+                } else {
+                    loginResultDiv.className = 'result error';
+                    loginResultDiv.innerHTML = `<strong>Erro:</strong> ${data.message}`;
+                }
+            } catch (error) {
+                loginResultDiv.className = 'result error';
+                loginResultDiv.innerHTML = `<strong>Erro de conexão.</strong>`;
+            }
+        });
+
+        // --- SCRIPT PARA O FORMULÁRIO DE BUSCA DE PERFIL (GET) ---
+        const profileForm = document.getElementById('profileForm');
+        const profileUsernameInput = document.getElementById('profileUsername');
+        const profileResultDiv = document.getElementById('profileResult');
+
+        profileForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const usernameToFind = profileUsernameInput.value;
+
+            profileResultDiv.innerHTML = 'Buscando...';
+            profileResultDiv.className = 'result';
+            
+            // A URL agora é dinâmica, baseada no que o usuário digitou
+            const url = `http://localhost:3001/profile/${usernameToFind}`;
+
+            try {
+                // Para a requisição GET, não precisamos de 'method', 'headers' ou 'body'.
+                // O padrão do fetch() já é GET.
+                const response = await fetch(url);
+                const data = await response.json();
+
+                if (response.ok) {
+                    profileResultDiv.className = 'result success';
+                    profileResultDiv.innerHTML = `<strong>Perfil encontrado!</strong><br><pre>${JSON.stringify(data, null, 2)}</pre>`;
+                } else {
+                    profileResultDiv.className = 'result error';
+                    profileResultDiv.innerHTML = `<strong>Erro:</strong> ${data.message}`;
+                }
+            } catch (error) {
+                profileResultDiv.className = 'result error';
+                profileResultDiv.innerHTML = `<strong>Erro de conexão.</strong>`;
+            }
+        });
+    </script>
+</body>
+</html>
