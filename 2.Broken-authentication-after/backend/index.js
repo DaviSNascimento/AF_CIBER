@@ -21,7 +21,6 @@ app.post('/login', async (req, res) => {
 
   try {
     // MITIGAÇÃO 1: Prevenção de SQL Injection com Parameterized Queries.
-    // O driver 'pg' substitui $1 pelo valor de 'username' de forma segura.
     const query = 'SELECT * FROM users WHERE username = $1';
     const result = await pool.query(query, [username]);
 

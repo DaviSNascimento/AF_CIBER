@@ -20,7 +20,7 @@ app.post('/login', async (req, res) => {
     const query = `SELECT * FROM users WHERE username = '${username}' AND password = '${password}'`;
     // como o comando funciona: username = 'admin'  -- ' AND password = 'qualquercoisa'
     // OU ' OR 1 = 1 --
-    console.log('POST | Executing query:', query); // logo para visualizarmos o ataque;
+    console.log('POST | Executing query:', query); // log para visualizarmos o ataque;
 
     try {
         const result = await pool.query(query);
