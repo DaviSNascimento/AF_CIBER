@@ -292,4 +292,3 @@ Você precisará de **dois terminais** abertos.
     ```
 
 ---
-```
