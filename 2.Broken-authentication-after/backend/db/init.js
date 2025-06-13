@@ -21,14 +21,17 @@ async function initializeDatabase() {
     // --- MITIGAÇÃO: Hashing das senhas ---
     // Criamos um "hash" da senha. O '10' é o "custo" do hash, quão complexo ele é.
     const adminPassword = await bcrypt.hash('admin123', 10);
-    const mariaPassword = await bcrypt.hash('senha456', 10);
+    const daviPassword = await bcrypt.hash('senha123', 10);
+    const andreyPassword = await bcrypt.hash('senha456', 10);
+
 
     // Usamos queries parametrizadas ($1, $2) para inserir os dados com segurança
     await client.query(`
       INSERT INTO users (username, password, email, full_name) VALUES
       ('admin', $1, 'admin@example.com', 'Administrador do Sistema'),
-      ('maria', $2, 'maria.s@example.com', 'Maria Souza');
-    `, [adminPassword, mariaPassword]);
+      ('davi', $2, 'davi@email.com', 'Davi Nascimento'),
+      ('andrey', $3, 'andrey@email.com', 'Andrey Pascoa');
+    `, [adminPassword, daviPassword, andreyPassword]);
     console.log('Usuários de exemplo com senhas seguras (hash) inseridos.');
 
   } catch (err) {

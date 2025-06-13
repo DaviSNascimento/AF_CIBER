@@ -4,7 +4,6 @@ const jwt = require('jsonwebtoken');
 const JWT_SECRET = 'minhaChave';
 
 function authMiddleware(req, res, next) {
-  // O token geralmente vem no cabeçalho 'Authorization' no formato "Bearer TOKEN"
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
 

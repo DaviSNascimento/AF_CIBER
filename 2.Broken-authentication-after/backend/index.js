@@ -7,10 +7,12 @@ const jwt = require('jsonwebtoken');
 const authMiddleware = require('./authMiddleware');
 
 const app = express();
+
 const port = 3002;
 const JWT_SECRET = 'minhaChave';
 
 app.use(cors());
+app.use(express.json());
 app.use(bodyParser.json());
 
 // --- ROTA DE LOGIN SEGURA ---

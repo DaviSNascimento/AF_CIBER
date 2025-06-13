@@ -20,7 +20,7 @@ app.post('/login', async (req, res) => {
     const query = `SELECT * FROM users WHERE username = '${username}' AND password = '${password}'`;
     // como o comando funciona: username = 'admin'  -- ' AND password = 'qualquercoisa'
     // OU ' OR 1 = 1 --
-    console.log('Executing query:', query); // logo para visualizarmos o ataque;
+    console.log('POST | Executing query:', query); // logo para visualizarmos o ataque;
 
     try {
         const result = await pool.query(query);
@@ -42,7 +42,7 @@ app.get('/profile/:username', async (req, res) => {
     const { username } = req.params;
 
     try {
-        const result = await pool.query('SELECT id, username, email, full_name FROM users WHERE username = $1', [username]);
+        const result = await pool.query('SELECT id, username, password, email, full_name FROM users WHERE username = $1', [username]);
         if (result.rows.length > 0) {
             res.status(200).json(result.rows[0]);
         } else {
@@ -51,6 +51,7 @@ app.get('/profile/:username', async (req, res) => {
     } catch (err) {
         res.status(500).json({ message: 'Erro no servidor.' });
     }
+    console.log(`GET | Perfil acessado: ${username}`); // Log para monitorar acessos
 });
 
 
