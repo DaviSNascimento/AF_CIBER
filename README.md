@@ -2,6 +2,8 @@
 
 
 
+> 🚨 Vídeo explicativo no youtube: [https://www.youtube.com/watch?v=4nYthvVog_o](https://youtu.be/4nYthvVog_o)
+
 Este repositório contém o material de um estudo de caso prático sobre a vulnerabilidade **Broken Authentication (Autenticação Quebrada)**, uma das falhas de segurança mais críticas e comuns segundo o OWASP Top 10.
 
 O objetivo é demonstrar, de forma clara e objetiva, como uma implementação insegura de login e gerenciamento de sessão pode ser explorada e, em seguida, como corrigi-la aplicando boas práticas de mercado.
